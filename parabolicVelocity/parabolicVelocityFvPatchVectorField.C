@@ -127,21 +127,12 @@ void parabolicVelocityFvPatchVectorField::updateCoeffs()
     boundBox bb(patch().patch().localPoints(), true);
     vectorField c = patch().Cf();
 
-    vector ctr(0, 0, 0);
-    vector ctr = 0.5(bb_min + bb_max);
-    //Info << "bb_max = " << bb.max() << "\n"
-    //    << "bb_min = " << bb.min() << "\n";
+    vector ctr = 0.5*(bb.min() + bb.max());
 
     scalarField coord1 = 2*((c - ctr) & x_)/((bb.max() - bb.min()) & x_);
     scalarField coord2 = 2*((c - ctr) & y_)/((bb.max() - bb.min()) & y_);
 
     scalarField coord = sqr(coord1) + sqr(coord2);
-
-    forAll(coord, icoord)
-    {
-        if(icoord % 50 == 0) Info << coord[icoord] << "\n";
-    }
-    //scalarField coord = coord2;
 
     vectorField::operator=(n_*maxValue_*(1.0 - sqr(coord)));
 }
