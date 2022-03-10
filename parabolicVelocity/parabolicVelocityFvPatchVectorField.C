@@ -158,6 +158,8 @@ void parabolicVelocityFvPatchVectorField::write(Ostream& os) const
         << n_ << token::END_STATEMENT << nl;
     os.writeKeyword("y")
         << y_ << token::END_STATEMENT << nl;
+    os.writeKeyword("x")
+        << x_ << token::END_STATEMENT << nl;
     writeEntry(os, "value", *this);
 }
 
