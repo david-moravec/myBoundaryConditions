@@ -104,14 +104,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new parabolicVelocityFvPatchVectorField(*this)
-            );
-        }
+        //disallow copy without setting internal field refernce
+        parabolicVelocityFvPatchVectorField
+        (
+            const parabolicVelocityFvPatchVectorField&
+        ) = delete;
 
         //- Construct as copy setting internal field reference
         parabolicVelocityFvPatchVectorField
