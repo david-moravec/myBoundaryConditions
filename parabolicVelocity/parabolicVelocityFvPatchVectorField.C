@@ -47,7 +47,9 @@ parabolicVelocityFvPatchVectorField::parabolicVelocityFvPatchVectorField
     maxValue_(0),
     n_(1, 0, 0),
     y_(0, 1, 0),
-    x_(0, 0, 1)
+    x_(0, 0, 1),
+    r_(1),
+    center_(0, 0, 0)
 {}
 
 
@@ -63,7 +65,9 @@ parabolicVelocityFvPatchVectorField::parabolicVelocityFvPatchVectorField
     maxValue_(ptf.maxValue_),
     n_(ptf.n_),
     y_(ptf.y_),
-    x_(ptf.x_)
+    x_(ptf.x_),
+    r_(ptf.r_),
+    center_(ptf.center_)
 {}
 
 
@@ -78,7 +82,9 @@ parabolicVelocityFvPatchVectorField::parabolicVelocityFvPatchVectorField
     maxValue_(readScalar(dict.lookup("maxValue"))),
     n_(dict.lookup("n")),
     y_(dict.lookup("y")),
-    x_(dict.lookup("x"))
+    x_(dict.lookup("x")),
+    r_(readScalar(dict.lookup("r"))),
+    center_(dict.lookup("center"))
 {
     /*
     Info << "mag(x) = " << mag(x_) << "\n"
@@ -111,7 +117,9 @@ parabolicVelocityFvPatchVectorField::parabolicVelocityFvPatchVectorField
     maxValue_(fcvpvf.maxValue_),
     n_(fcvpvf.n_),
     y_(fcvpvf.y_),
-    x_(fcvpvf.x_)
+    x_(fcvpvf.x_),
+    r_(fcvpvf.r_),
+    center_(fcvpvf.center_)
 {}
 
 
@@ -124,17 +132,17 @@ void parabolicVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    boundBox bb(patch().patch().localPoints(), true);
+    //boundBox bb(patch().patch().localPoints(), true);
     vectorField c = patch().Cf();
 
-    vector ctr = 0.5*(bb.min() + bb.max());
+    //vector ctr = 0.5*(bb.min() + bb.max());
 
-    scalarField coord1 = 2*((c - ctr) & x_)/((bb.max() - bb.min()) & x_);
-    scalarField coord2 = 2*((c - ctr) & y_)/((bb.max() - bb.min()) & y_);
+    scalarField coord1 = ((c - center_) & x_)/(r_);
+    scalarField coord2 = ((c - center_) & y_)/(r_);
 
     scalarField coord = sqr(coord1) + sqr(coord2);
 
-    vectorField::operator=(n_*maxValue_*(1.0 - sqr(coord)));
+    vectorField::operator=(n_*maxValue_*(1 - coord));
 }
 
 /*
@@ -160,6 +168,10 @@ void parabolicVelocityFvPatchVectorField::write(Ostream& os) const
         << y_ << token::END_STATEMENT << nl;
     os.writeKeyword("x")
         << x_ << token::END_STATEMENT << nl;
+    os.writeKeyword("r")
+        << r_ << token::END_STATEMENT << nl;
+    os.writeKeyword("center")
+        << center_ << token::END_STATEMENT << nl;
     writeEntry(os, "value", *this);
 }
 

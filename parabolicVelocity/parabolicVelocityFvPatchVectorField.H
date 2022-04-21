@@ -70,6 +70,12 @@ class parabolicVelocityFvPatchVectorField
         
         vector x_;
 
+        //radius
+        scalar r_;
+
+        //center of patch
+        vector center_;
+
 
 public:
 
