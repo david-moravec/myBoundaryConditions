@@ -140,9 +140,10 @@ void parabolicVelocityFvPatchVectorField::updateCoeffs()
     scalarField coord1 = ((c - center_) & x_)/(r_);
     scalarField coord2 = ((c - center_) & y_)/(r_);
 
-    scalarField coord = sqr(coord1) + sqr(coord2);
+    scalarField coord = sqrt(sqr(coord1) + sqr(coord2));
 
-    vectorField::operator=(n_*maxValue_*(1 - coord));
+    vectorField::operator=(n_*(1.06603 - 0.03576 * coord          - 16757.3   * pow(coord, 2) 
+                                       - 70202.6 * pow(coord, 3)  - 369192648 * pow(coord, 4)));
 }
 
 /*
